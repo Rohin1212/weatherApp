@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Weather app</title>
+  <link rel="stylesheet" href="../static/style.css" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="app-wrap">
+    <header>
+        <form action="{{url_for('display')}}" method="POST">
+            <input type="text" name="city" autocomplete="off" class="box search-box" placeholder="Search for a city..." />
+            <br>
+            <input type="text" name="country" autocomplete="off" class="box search-box" placeholder="Enter the Country..." /><br>
+            <input type="submit" class="mybtn btn btn-primary" value="Submit">
+        </form>
+    </header>
+    <main>
+      <section class="location">
+        {% if 'city' in final_weather_data %}
+          <div class="city">{{final_weather_data['city']}}, {{final_weather_data['country']}}</div>
+          <div class="date">Thursday 10 January 2020</div>
+        {% endif %}  
+      </section>
+      <div class="current">
+        {% if 'temp' in final_weather_data %}
+          <div class="temp">{{final_weather_data['temp']}}<span>°c</span></div>
+          <div class="weather">{{final_weather_data['descp']}}</div>
+          <div class="hi-low">{{final_weather_data['temp_min']}}°c / {{final_weather_data['temp_min']}}°c</div>
+        {% endif %}  
+      </div>
+    </main>
+  </div>
+</body>
+</html>
