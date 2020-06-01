@@ -16,18 +16,25 @@ def display():
     if request.method == 'POST':
         city = request.form['city']
         country = request.form['country']
-        weather_api = f"https://api.openweathermap.org/data/2.5/weather?q={city},{country}&appid=8b1f554d266a4addbfb19f2905f74e17"
-        with urllib.request.urlopen(weather_api) as weather_url:
-            weather_data = json.loads(weather_url.read().decode())
-            final_weather_data = {}
-            final_weather_data['city'] = city.title()
-            final_weather_data['country'] = country.title()
-            final_weather_data['temp'] = kelv_to_celc(weather_data['main']['temp'])
-            final_weather_data['temp_min'] = kelv_to_celc(weather_data['main']['temp_min'])
-            final_weather_data['temp_max'] = kelv_to_celc(weather_data['main']['temp_max'])
-            final_weather_data['descp'] = weather_data['weather'][0]['main']
-            my_date = date.today()
-            final_weather_data['day'] = my_date.strftime("%B %d %Y")
+        final_weather_data = {}
+        try:
+            weather_api = f"https://api.openweathermap.org/data/2.5/weather?q={city},{country}&appid=8b1f554d266a4addbfb19f2905f74e17"
+            with urllib.request.urlopen(weather_api) as weather_url:
+                weather_data = json.loads(weather_url.read().decode())
+                final_weather_data['city'] = city.title()
+                final_weather_data['country'] = country.title()
+                final_weather_data['temp'] = kelv_to_celc(weather_data['main']['temp'])
+                final_weather_data['temp_min'] = kelv_to_celc(weather_data['main']['temp_min'])
+                final_weather_data['temp_max'] = kelv_to_celc(weather_data['main']['temp_max'])
+                final_weather_data['descp'] = weather_data['weather'][0]['main']
+                final_weather_data['wind'] = weather_data['wind']['speed']
+                final_weather_data['humidity'] = weather_data['main']['humidity']
+                my_date = date.today()
+                final_weather_data['day'] = my_date.strftime("%B %d %Y")
+        except:
+            error = 'Sorry, could not find it!'
+            return render_template('index.html', error = error)
+
         return render_template('index.html', final_weather_data = final_weather_data)
 
 if(__name__ == '__main__'):

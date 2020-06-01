@@ -1,43 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Weather app</title>
-  <link rel="stylesheet" href="../static/style.css" />
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+<html>
 
-</head>
-<body>
-  <div class="app-wrap">
-    <header>
-        <form action="{{url_for('display')}}" method="POST">
-            <input type="text" name="city" autocomplete="off" class="box search-box" placeholder="Search for a city..." />
+    <head>
+        <link rel="stylesheet" href="../static/style.css">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <script src=" {{ url_for('static', filename = 'script.js') }} "></script>
+        {%if 'descp' in final_weather_data %}
+        <style>
+            {% if final_weather_data['descp'] =='Clear'%}
+                body{
+                    background-image: url('{{ url_for('static', filename = 'clear.jpg') }}');
+                }
+            {%elif  final_weather_data['descp'] =='Clouds' %}    
+                body{
+                    background-image: url('{{ url_for('static', filename = 'cloudy.jpg') }}');
+                }
+            {%elif  final_weather_data['descp'] =='Mist' or final_weather_data['descp'] =='Drizzle' or final_weather_data['descp'] =='Rain' %}    
+                body{
+                    background-image: url('{{ url_for('static', filename = 'rain.jpg') }}');
+                }   
+            {%elif  final_weather_data['descp'] =='Thunderstorm' %}    
+                body{
+                    background-image: url('{{ url_for('static', filename = 'storm.jpg') }}');
+                }    
+            {%elif  final_weather_data['Snow'] =='Thunderstorm' %}    
+                body{
+                    background-image: url('{{ url_for('static', filename = 'snow.jpg') }}');
+                }           
+            {% endif %}
+        </style>
+        {%endif%}
+    </head>
+
+    <body>
+        <div id="searchContainer">
+            <form action="/display" method="post">
+                <input class="searchControl" name="city" type="text" placeholder="City Name" id="searchInput"><br><br>
+                <input type="text" name="country" autocomplete="off" class="searchControl" placeholder="Enter the Country..." /><br><br>
+                <button class="searchControl" id="searchBtn">Search</button>
+            </form>
             <br>
-            <input type="text" name="country" autocomplete="off" class="box search-box" placeholder="Enter the Country..." /><br>
-            <input type="submit" class="mybtn btn btn-primary" value="Submit">
-        </form>
-    </header>
-    <main>
-      <section class="location">
+        </div>
         {% if 'city' in final_weather_data %}
-          <div class="city">{{final_weather_data['city']}}, {{final_weather_data['country']}}</div>
-          <div class="date">{{final_weather_data['day']}}</div>
+        <div id="weatherContainer">
+            <div id="weatherDescription">
+                <h1 id="cityHeader"> {{final_weather_data['city']}} </h1>
+                <div id="weatherMain">
+                    <div id="temperature"> {{final_weather_data['temp']}} &#730;</div>
+                    <div id="weatherDescriptionHeader">  {{final_weather_data['descp']}} </div>
+                    <div><img id="documentIconImg"></div>
+                </div>
+                <hr>
+                <div id="windSpeed" class="bottom-details">Winds at {{final_weather_data['wind']}} m/s</div>
+                <div id="humidity" class="bottom-details">Humidity levels at {{final_weather_data['humidity']}}%</div>
+            </div>
+        </div>
         {% endif %}  
-      </section>
-      <div class="current">
-        {% if 'temp' in final_weather_data %}
-          <div class="temp">{{final_weather_data['temp']}}<span>°c</span></div>
-          <div class="weather">{{final_weather_data['descp']}}</div>
-          <div class="hi-low">{{final_weather_data['temp_min']}}°c / {{final_weather_data['temp_min']}}°c</div>
-        {% endif %}  
-      </div>
-    </main>
-  </div>
-</body>
+        {%  if error in error  %}
+            <div id="weatherContainer">
+                <h1 id="cityHeader">{{error}}</h1>
+            </div>
+        {%endif%}
+    </body>
 </html>
