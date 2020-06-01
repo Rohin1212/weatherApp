@@ -1,11 +1,10 @@
 <html>
-
     <head>
         <link rel="stylesheet" href="../static/style.css">
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-        <script src=" {{ url_for('static', filename = 'script.js') }} "></script>
+       
         {%if 'descp' in final_weather_data %}
-        <style>
+       <style>
             {% if final_weather_data['descp'] =='Clear'%}
                 body{
                     background-image: url('{{ url_for('static', filename = 'clear.jpg') }}');
@@ -28,25 +27,42 @@
                 }           
             {% endif %}
         </style>
-        {%endif%}
+        {%endif%}   
+       
+        {%if 'descp' in final_weather_data %}
+        <script src=" {{ url_for('static', filename = 'script.js') }} "></script>
+        {%endif%}   
+
+        <script src="https://code.jquery.com/jquery-3.5.1.js" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.js"></script>
+        <link href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.2/select2.css" rel="stylesheet"/>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+        <script src=" {{ url_for('static', filename = 'data.js') }} "></script>
     </head>
 
     <body>
         <div id="searchContainer">
             <form action="/display" method="post">
                 <input class="searchControl" name="city" type="text" placeholder="City Name" id="searchInput"><br><br>
-                <input type="text" name="country" autocomplete="off" class="searchControl" placeholder="Enter the Country..." /><br><br>
+                <select name="country" class="countries-select"></select>
+                
                 <button class="searchControl" id="searchBtn">Search</button>
             </form>
+            <script>
+                $(".countries-select").select2({
+                    data: data
+                  })
+        </script>
             <br>
         </div>
         {% if 'city' in final_weather_data %}
         <div id="weatherContainer">
             <div id="weatherDescription">
-                <h1 id="cityHeader"> {{final_weather_data['city']}} </h1>
+                <h1 id="cityHeader"> {{final_weather_data['city']}}, </h1>
                 <div id="weatherMain">
                     <div id="temperature"> {{final_weather_data['temp']}} &#730;</div>
-                    <div id="weatherDescriptionHeader">  {{final_weather_data['descp']}} </div>
+                    <div id="weatherDescriptionHeader">  {{final_weather_data['descp']}} {{final_weather_data['country']}} </div>
                     <div><img id="documentIconImg"></div>
                 </div>
                 <hr>
@@ -55,10 +71,11 @@
             </div>
         </div>
         {% endif %}  
-        {%  if error in error  %}
+        {% if error in error %}
             <div id="weatherContainer">
                 <h1 id="cityHeader">{{error}}</h1>
             </div>
-        {%endif%}
+        {% endif %}
+
     </body>
 </html>
